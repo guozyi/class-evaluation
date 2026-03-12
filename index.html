@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>服饰文化课堂互评</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:linear-gradient(135deg,#6dd5ed,#2193b0);
+text-align:center;
+color:#333;
+}
+
+.container{
+background:white;
+width:420px;
+margin:50px auto;
+padding:30px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+h2{
+color:#2193b0;
+}
+
+.score-item{
+margin:10px 0;
+display:flex;
+justify-content:space-between;
+}
+
+input{
+width:60px;
+padding:5px;
+}
+
+select{
+padding:6px;
+width:100%;
+margin-bottom:15px;
+}
+
+button{
+margin-top:15px;
+padding:10px 20px;
+background:#2193b0;
+color:white;
+border:none;
+border-radius:6px;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1b7fa3;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>服饰文化课堂互评</h2>
+
+<p>请为展示小组评分</p>
+
+<select id="group"></select>
+
+<div class="score-item">
+<label>内容调研</label>
+<input type="number" id="c1" min="0" max="10">
+</div>
+
+<div class="score-item">
+<label>视频呈现</label>
+<input type="number" id="c2" min="0" max="10">
+</div>
+
+<div class="score-item">
+<label>思维导图</label>
+<input type="number" id="c3" min="0" max="10">
+</div>
+
+<div class="score-item">
+<label>团队展示</label>
+<input type="number" id="c4" min="0" max="10">
+</div>
+
+<button onclick="submitScore()">提交评分</button>
+
+<p id="msg"></p>
+
+</div>
+
+<script src="data.js"></script>
+
+<script>
+
+loadGroups()
+
+function submitScore(){
+
+let group=document.getElementById("group").value
+
+let score={
+c1:Number(c1.value),
+c2:Number(c2.value),
+c3:Number(c3.value),
+c4:Number(c4.value)
+}
+
+saveScore(group,score)
+
+msg.innerHTML="评分提交成功！"
+
+}
+
+</script>
+
+</body>
+
+</html>

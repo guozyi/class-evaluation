@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>课堂互评后台</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f8;
+padding:40px;
+}
+
+h2{
+color:#333;
+}
+
+table{
+border-collapse:collapse;
+width:600px;
+background:white;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+th,td{
+border:1px solid #ddd;
+padding:10px;
+text-align:center;
+}
+
+th{
+background:#2193b0;
+color:white;
+}
+
+button{
+padding:5px 10px;
+background:#2193b0;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#197899;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>课堂互评教师后台</h2>
+
+<button onclick="addGroup()">新增小组</button>
+
+<table id="table">
+
+<tr>
+<th>小组名称</th>
+<th>评分开关</th>
+<th>平均分</th>
+</tr>
+
+</table>
+
+<script src="data.js"></script>
+
+<script>
+
+renderAdmin()
+
+</script>
+
+</body>
+
+</html>
