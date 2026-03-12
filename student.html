@@ -53,21 +53,25 @@ fetch(groupsUrl)
 
 // 生成 JSON 文件下载
 document.getElementById('submitBtn').onclick = ()=>{
-  const name = document.getElementById('studentName').value.trim();
   const groupId = groupSelect.value;
   const score = document.getElementById('scoreInput').value;
 
-  if(!name || !groupId || !score){
-    alert('请填写姓名、小组和评分');
+  if(!groupId || !score){
+    alert('请填写小组和评分');
     return;
   }
 
-  const submission = {student:name, groupId:groupId, score:score, time: new Date().toISOString()};
+  const submission = {
+    groupId: groupId,
+    score: score,
+    time: new Date().toISOString()
+  };
+
   const blob = new Blob([JSON.stringify(submission, null,2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `submission_${name}.json`;
+  a.download = `submission_group${groupId}.json`;
   a.click();
   URL.revokeObjectURL(url);
   alert('已生成 JSON 文件，请发送给教师');
@@ -75,4 +79,5 @@ document.getElementById('submitBtn').onclick = ()=>{
 </script>
 </body>
 </html>
+
 
