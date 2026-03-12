@@ -14,10 +14,22 @@ button:hover{ background:#45a049; }
 <body>
 <div class="container">
 <h2>提交评分</h2>
-<label>姓名<input type="text" id="studentName" placeholder="请输入姓名"></label>
-<label>选择小组<select id="groupSelect"><option>加载中...</option></select></label>
-<label>评分<input type="number" id="scoreInput" min="0" max="5"></label>
+
+<!-- 选择小组 -->
+<label>选择小组
+  <select id="groupSelect">
+    <option>加载中...</option>
+  </select>
+</label>
+
+<!-- 输入评分 -->
+<label>评分 (0-5)
+  <input type="number" id="scoreInput" min="0" max="5" placeholder="请输入分数">
+</label>
+
+<!-- 提交按钮 -->
 <button id="submitBtn">生成提交文件</button>
+
 <p>⚠️ 请将生成的 JSON 文件发给教师汇总</p>
 </div>
 
@@ -63,3 +75,4 @@ document.getElementById('submitBtn').onclick = ()=>{
 </script>
 </body>
 </html>
+
