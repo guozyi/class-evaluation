@@ -10,7 +10,7 @@ const submitBtn = document.getElementById('submitBtn');
 // ----------------------
 // CDN URL 指向 GitHub 仓库的 groups.json
 // ?ts= 时间戳防止 CDN 缓存
-const groupsUrl = 'https://cdn.jsdelivr.net/gh/guozyi/class-evaluation/groups.json?ts=' + Date.now();
+const groupsUrl = 'https://cdn.jsdelivr.net/gh/guozyi/class-evaluation@v1.0.2/groups.json?ts=' + Date.now();
 
 fetch(groupsUrl)
   .then(res => res.json())
@@ -61,3 +61,4 @@ submitBtn.onclick = () => {
   // 清空评分输入框，方便下一个提交
   scoreInput.value = '';
 };
+
