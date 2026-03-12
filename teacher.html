@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>教师端 - 小组管理</title>
-<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <h1>教师端 - 小组管理</h1>
@@ -16,29 +15,53 @@
 <h3>现有小组：</h3>
 <ul id="groupList"></ul>
 
-<h3>学生提交汇总（Google Sheets）</h3>
-<iframe id="submissionsFrame" src="https://docs.google.com/spreadsheets/d/e/YOUR_GOOGLE_SHEET_ID/pubhtml?widget=true&amp;headers=false" width="600" height="400"></iframe>
+<button id="downloadJson">下载 groups.json</button>
 
-<p>⚠️ 修改小组完成后，将 groups.json 上传到 GitHub 仓库，学生端即可同步。</p>
-
-<script src="js/main.js"></script>
 <script>
+let groups = [
+  {id:1, name:"小组1"},
+  {id:2, name:"小组2"}
+];
+
 const groupListEl = document.getElementById('groupList');
-let groups = [];
 
-// 加载小组列表
-fetchGroups('https://cdn.jsdelivr.net/gh/guozyi/class-evaluation/groups.json', data=>{
-  groups = data;
-  renderTeacherGroups(groups, groupListEl);
-});
+function renderGroups(){
+  groupListEl.innerHTML = '';
+  groups.forEach((g, idx)=>{
+    const li = document.createElement('li');
+    li.textContent = g.name + ' ';
+    const btn = document.createElement('button');
+    btn.textContent = '删除';
+    btn.onclick = ()=>{
+      groups.splice(idx,1);
+      renderGroups();
+    };
+    li.appendChild(btn);
+    groupListEl.appendChild(li);
+  });
+}
 
-// 添加小组按钮
 document.getElementById('addBtn').onclick = ()=>{
-  const name = document.getElementById('newGroupName').value;
-  addGroup(groups, name, groupListEl);
-  document.getElementById('newGroupName').value='';
-  console.log("最新小组数据(JSON):", JSON.stringify(groups, null,2));
-};
+  const name = document.getElementById('newGroupName').value.trim();
+  if(name!==''){
+    groups.push({id:groups.length+1, name});
+    renderGroups();
+    document.getElementById('newGroupName').value='';
+  }
+}
+
+// 下载 JSON 文件
+document.getElementById('downloadJson').onclick = ()=>{
+  const blob = new Blob([JSON.stringify(groups, null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'groups.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+renderGroups();
 </script>
 </body>
 </html>
