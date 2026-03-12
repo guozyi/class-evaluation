@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>学生端 - 提交评分</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<h1>学生端 - 评分提交</h1>
+
+<label>姓名：
+  <input type="text" id="studentName" placeholder="请输入姓名">
+</label>
+
+<label>选择小组：
+  <select id="groupSelect"></select>
+</label>
+
+<label>评分：
+  <input type="number" id="scoreInput" min="0" max="5">
+</label>
+
+<button id="submitBtn">提交</button>
+
+<p>⚠️ 数据将提交到 Google Form，教师可在后台查看汇总</p>
+
+<script src="js/main.js"></script>
+<script>
+const groupSelect = document.getElementById('groupSelect');
+
+// 加载小组列表
+fetchGroups('https://cdn.jsdelivr.net/gh/guozyi/class-evaluation/groups.json', data=>{
+  data.forEach(g=>{
+    const opt = document.createElement('option');
+    opt.value = g.id;
+    opt.textContent = g.name;
+    groupSelect.appendChild(opt);
+  });
+});
+
+// 提交按钮
+document.getElementById('submitBtn').onclick = ()=>{
+  const studentName = document.getElementById('studentName').value.trim();
+  const groupId = groupSelect.value;
+  const score = document.getElementById('scoreInput').value;
+
+  if(!studentName || !score){
+    alert('请输入姓名和评分');
+    return;
+  }
+
+  // 提交到 Google Form
+  const formUrl = 'https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_ID/formResponse';
+  const params = new URLSearchParams();
+  params.append('entry.111111111', studentName); // 替换为表单字段ID
+  params.append('entry.222222222', groupId);
+  params.append('entry.333333333', score);
+
+  fetch(formUrl, {method:'POST', mode:'no-cors', body:params})
+    .then(()=>alert('提交成功'))
+    .catch(()=>alert('提交失败，请稍后重试'));
+};
+</script>
+</body>
+</html>
