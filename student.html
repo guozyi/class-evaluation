@@ -3,63 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <title>学生端 - 提交评分</title>
-<link rel="stylesheet" href="css/style.css">
+<style>
+body{ font-family: "Microsoft YaHei"; display:flex; justify-content:center; align-items:center; height:100vh; }
+.container{ background:#fff;padding:2rem;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1); width:350px; text-align:center; }
+input, select, button{ width:100%; padding:0.5rem; margin:0.5rem 0; border-radius:6px; border:1px solid #ccc; }
+button{ background:#4CAF50;color:#fff; font-weight:bold; cursor:pointer; border:none; }
+button:hover{ background:#45a049; }
+</style>
 </head>
 <body>
-<h1>学生端 - 评分提交</h1>
+<div class="container">
+<h2>提交评分</h2>
+<label>姓名<input type="text" id="studentName" placeholder="请输入姓名"></label>
+<label>选择小组<select id="groupSelect"><option>加载中...</option></select></label>
+<label>评分<input type="number" id="scoreInput" min="0" max="5"></label>
+<button id="submitBtn">生成提交文件</button>
+<p>⚠️ 请将生成的 JSON 文件发给教师汇总</p>
+</div>
 
-<label>姓名：
-  <input type="text" id="studentName" placeholder="请输入姓名">
-</label>
-
-<label>选择小组：
-  <select id="groupSelect"></select>
-</label>
-
-<label>评分：
-  <input type="number" id="scoreInput" min="0" max="5">
-</label>
-
-<button id="submitBtn">提交</button>
-
-<p>⚠️ 数据将提交到 Google Form，教师可在后台查看汇总</p>
-
-<script src="js/main.js"></script>
 <script>
 const groupSelect = document.getElementById('groupSelect');
 
-// 加载小组列表
-fetchGroups('https://cdn.jsdelivr.net/gh/guozyi/class-evaluation/groups.json', data=>{
-  data.forEach(g=>{
-    const opt = document.createElement('option');
-    opt.value = g.id;
-    opt.textContent = g.name;
-    groupSelect.appendChild(opt);
-  });
-});
+// 自动获取教师端更新的小组列表
+const groupsUrl = 'https://cdn.jsdelivr.net/gh/guozyi/class-evaluation/groups.json?ts='+Date.now();
+fetch(groupsUrl)
+  .then(res=>res.json())
+  .then(data=>{
+    groupSelect.innerHTML='';
+    data.forEach(g=>{
+      const opt = document.createElement('option');
+      opt.value = g.id;
+      opt.textContent = g.name;
+      groupSelect.appendChild(opt);
+    });
+  })
+  .catch(err=>{ console.error(err); groupSelect.innerHTML='<option>加载失败</option>'; });
 
-// 提交按钮
+// 生成 JSON 文件下载
 document.getElementById('submitBtn').onclick = ()=>{
-  const studentName = document.getElementById('studentName').value.trim();
+  const name = document.getElementById('studentName').value.trim();
   const groupId = groupSelect.value;
   const score = document.getElementById('scoreInput').value;
 
-  if(!studentName || !score){
-    alert('请输入姓名和评分');
+  if(!name || !groupId || !score){
+    alert('请填写姓名、小组和评分');
     return;
   }
 
-  // 提交到 Google Form
-  const formUrl = 'https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_ID/formResponse';
-  const params = new URLSearchParams();
-  params.append('entry.111111111', studentName); // 替换为表单字段ID
-  params.append('entry.222222222', groupId);
-  params.append('entry.333333333', score);
-
-  fetch(formUrl, {method:'POST', mode:'no-cors', body:params})
-    .then(()=>alert('提交成功'))
-    .catch(()=>alert('提交失败，请稍后重试'));
-};
+  const submission = {student:name, groupId:groupId, score:score, time: new Date().toISOString()};
+  const blob = new Blob([JSON.stringify(submission, null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `submission_${name}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  alert('已生成 JSON 文件，请发送给教师');
+}
 </script>
 </body>
 </html>
